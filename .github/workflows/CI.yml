@@ -28,12 +28,21 @@ jobs:
         password: ${{ secrets.DOCKERHUB_PW }}
     - name: docker pull base image
       run: docker pull notadockerhub/ci_test:base
-    - name: Push to Docker Hub
+    - name: Push to Docker Hub(develop)
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_ID }}
         password: ${{ secrets.DOCKERHUB_PW }}
-        repository: notadockerhub/netspresso_server
+        repository: notadockerhub/ci_test
+        dockerfile: dockerfiles/dockerfile.develop
+        tag_with_ref: true
+        tags: latest-develop, develop-${{ steps.tag_version.outputs.new_tag }}
+    - name: Push to Docker Hub(release)
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_ID }}
+        password: ${{ secrets.DOCKERHUB_PW }}
+        repository: notadockerhub/ci_test
         dockerfile: dockerfiles/dockerfile.release
         tag_with_ref: true
-        tags: latest-release, ${{ steps.tag_version.outputs.new_tag }}
+        tags: latest-release, release-${{ steps.tag_version.outputs.new_tag }}
