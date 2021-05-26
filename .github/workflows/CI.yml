@@ -21,3 +21,14 @@ jobs:
         DEFAULT_BUMP: patch
         WITH_V: true
         RELEASE_BRANCHES: main,develop
+    - name: docker pull base image
+      run: docker pull notadockerhub/ci_test:base
+    - name: Push to Docker Hub
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_ID }}
+        password: ${{ secrets.DOCKERHUB_PW }}
+        repository: notadockerhub/netspresso_server
+        dockerfile: dockerfiles/dockerfile.release
+        tag_with_ref: true
+        tags: latest-release, ${{ steps.tag_version.outputs.new_tag }}
