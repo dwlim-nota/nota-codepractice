@@ -1,2 +1,2 @@
 FROM ubuntu:latest
-COPY . /app
+COPY . /app/app
